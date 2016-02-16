@@ -1,0 +1,58 @@
+#!/usr/bin/env python
+
+import os
+import csv
+
+
+os.getcwd()
+
+# <codecell>
+
+os.chdir('/home/taaniel/Desktop/gbk')
+gbk_list = []
+for f in os.listdir('./'):
+    if f.endswith('.gbk'):
+        gbk_list.append(f)
+
+print(gbk_list)
+
+gbkfile = raw_input("Type the genbank file name: ")
+fileRows = []
+with open(gbkfile, 'r+') as fd:
+   for line in fd:
+      fileRows.append(line)
+
+
+# <codecell>
+
+peg_list = []
+
+for f in os.listdir('./'):
+    if f.endswith('.csv'):
+        peg_list.append(f)
+
+print(peg_list)
+
+pegfile = raw_input("Choose the peg to name file: ")
+
+with open(pegfile, mode='r') as infile:
+    reader = csv.reader(infile)
+    with open('peg_names_new.csv', mode='w') as outfile:
+        writer = csv.writer(outfile)
+        myDict = {rows[0]:rows[1] for rows in reader}
+
+# <codecell>
+
+for key, value in myDict.items():
+    for i, j in enumerate(fileRows):
+        if key in j:
+            fileRows.insert(i+1,'                     /gene="%s" \n' %myDict[key])
+            print(fileRows[i+1])
+print("Done!")
+
+# <codecell>
+
+outfile = open("output.gbk", "w")
+for item in fileRows:
+  outfile.write("%s" % item)
+
